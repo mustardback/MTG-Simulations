@@ -1,0 +1,57 @@
+#Mulligan Simulator
+#Simulates drawing opening hands and makes a mulligan decision based on 
+#land counts in opening hands
+#Uses binary arrays to represent lands as 1, spells as 0
+
+import numpy as np
+import numpy.random as r
+import matplotlib.pyplot as plt
+
+limited = True
+constructed = False
+num_sims = 10000
+
+#Set deck size based on format
+if limited:
+    deck = np.zeros(40)
+else:
+    deck = np.zeros(60)
+    
+def keep_or_mull(deck):
+    """Shuffles the deck order and draws an opening 7 cards.
+    Keepable hand is defined as having land count between 2 and 4 cards.
+    
+    Returns bool representing mulligan decision:
+        True: hand satisfiess criteria
+        False: hand fails criteria"""
+    
+    r.shuffle(deck)
+    hand = deck[:8]
+    land_count = hand.sum()
+    if land_count >= 2 and land_count <= 4:
+        #print('Hand Kept')
+        return True
+    else:
+        #print('Hand Mulled')
+        return False
+        
+#set number of lands for simulation
+#propose changing var names i,j to d_size, lands respectively
+
+
+for i in range(len(deck)):
+    hands_kept = 0
+    hands_mulled = 0
+    for j in range(i):
+        #fill deck with lands
+        deck[i] = 1
+    print('For Land Count ' + str(deck.sum()) + ':')
+    for i in range(num_sims):
+        if(keep_or_mull(deck)):
+            hands_kept += 1
+        else:
+            hands_mulled += 1
+    print('Hands Kept: ' + str(hands_kept))
+    print('Hands Mulled: ' + str(hands_mulled))
+    
+#Plot of number of lands in deck (x) versus hands kept versus mulled (y)
